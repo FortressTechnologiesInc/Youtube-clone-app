@@ -5,17 +5,32 @@ on:
     branches:
       - main
 
-
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - uses: sonarsource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      
+
+      - name: Debug
+        run: |
+          echo "SONARQUBE_SERVER_IP: ${{ secrets.SONARQUBE_SERVER_IP }}"
+          echo "SonarQube URL: http://${{ secrets.SONARQUBE_SERVER_IP }}:9000"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+        with:
+          sonar-login: ${{ secrets.SONARQUBE_TOKEN }}
+          sonar-host: "http://${{ secrets.SONARQUBE_SERVER_IP }}:9000"
+
