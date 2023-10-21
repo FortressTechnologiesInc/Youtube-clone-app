@@ -1,4 +1,4 @@
-name: SonarQube Analysis
+name: Build and Analyze
 
 on:
   push:
@@ -6,20 +6,42 @@ on:
       - main
 
 jobs:
-  sonarqube:
+  build:
+    name: Build and Analyze
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: Set up Java
         uses: actions/setup-java@v2
         with:
-          java-version: 11.0.20.1
-          distribution: 'ubuntu'  # Specify the desired Linux distribution
+          java-version: 11
+          distribution: 'adopt'  # Use 'adopt' distribution for Java 11
 
-      - name: SonarQube Scan
+      - name: Check Java version
+        run: java 11.0.20.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14  # You can specify the Node.js version you need
+
+      - name: Check Node.js version
+        run: node -v
+
+      - name: Set up SonarQube Scanner
         uses: sonarsource/sonarqube-scan-action@master
         with:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          sonar-token: ${{ secrets.SONAR_TOKEN }}
+          sonar-url: ${{ secrets.SONAR_HOST_URL }}
+
+      - name: Build and analyze
+        run: |
+          # Add your build and analysis commands here
+          # For example, you can run npm install and analyze your Node.js project.
+          # npm install
+          # sonar-scanner
