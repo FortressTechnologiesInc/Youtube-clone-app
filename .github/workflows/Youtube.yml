@@ -15,11 +15,6 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
 
-      - name: Debug
-        run: |
-          echo "SONARQUBE_SERVER_IP: ${{ secrets.SONARQUBE_SERVER_IP }}"
-          echo "SonarQube URL: http://${{ secrets.SONARQUBE_SERVER_IP }}:9000"
-
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -30,7 +25,6 @@ jobs:
 
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
-        with:
-          sonar-login: ${{ secrets.SONARQUBE_TOKEN }}
-          sonar-host: "http://${{ secrets.SONARQUBE_SERVER_IP }}:9000"
-
+        env:
+          SONAR_HOST_URL: ${{ secrets.SONARQUBE_SERVER_IP }}
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
