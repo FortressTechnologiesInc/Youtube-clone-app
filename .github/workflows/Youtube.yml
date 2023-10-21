@@ -1,3 +1,10 @@
+- name: Analyze with SonarQube
+  uses: sonarsource/sonarqube-scan-action@master
+  with:
+    sonar-token: ${{ secrets.SONAR_TOKEN }}
+    sonar-url: ${{ secrets.SONAR_HOST_URL }}
+
+
 name: Build and Analyze
 
 on:
@@ -16,8 +23,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      
-
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
@@ -26,15 +31,8 @@ jobs:
       - name: Check Node.js version
         run: node -v
 
-      - name: Set up SonarQube Scanner
+      - name: Analyze with SonarQube
         uses: sonarsource/sonarqube-scan-action@master
         with:
           sonar-token: ${{ secrets.SONAR_TOKEN }}
           sonar-url: ${{ secrets.SONAR_HOST_URL }}
-
-      - name: Build and analyze
-        run: |
-          # Add your build and analysis commands here
-          # For example, you can run npm install and analyze your Node.js project.
-          # npm install
-          # sonar-scanner
