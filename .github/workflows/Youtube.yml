@@ -16,13 +16,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Java
-        uses: actions/setup-java@v2
-        with:
-          java-version: 11.0.20.1  # Specify the exact version you want
-
-      - name: Check Java version
-        run: java -version
+      
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
