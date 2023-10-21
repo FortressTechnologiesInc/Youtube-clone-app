@@ -16,10 +16,9 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 11
-          distribution: 'adopt'  # Specify the distribution you want to use, e.g., 'adopt', 'adopt-openj9', 'amazon', etc.
 
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
         with:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: http://192.168.1.17:9000
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
