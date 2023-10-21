@@ -16,6 +16,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 11
+          distribution: 'ubuntu'  # Specify the distribution as 'ubuntu'
 
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
