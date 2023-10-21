@@ -1,0 +1,49 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: 11
+
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: SonarQube Analysis
+        uses: sonarsource/sonarqube-scan-action@v1
+        with:
+          sonar-token: ${{ secrets.SONAR_TOKEN }}  # Set this secret in your repository settings
+          sonar-project-key: <your-sonar-project-key>
+          sonar-organization: <your-sonar-organization>
+          github-token: ${{ github.token }}
+
+      - name: OWASP Dependency Check
+        run: |
+          curl -fsSL -o dependency-check.zip https://github.com/jeremylong/DependencyCheck/releases/download/v6.4.1/dependency-check-6.4.1-release.zip
+          unzip dependency-check.zip
+          cd dependency-check/bin
+          ./dependency-check.sh --scan <path-to-your-JAR-or-WAR-file>
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t your-docker-image-name .
+          docker tag your-docker-image-name:latest your-dockerhub-username/your-docker-image-name:latest
+          docker push your-dockerhub-username/your-docker-image-name:latest
