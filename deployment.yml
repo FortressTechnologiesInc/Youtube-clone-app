@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-app-deployment
+  name: youtubez
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: my-app
+      app: youtubez
   template:
     metadata:
       labels:
-        app: my-app
+        app: youtubez
     spec:
       containers:
-        - name: my-app
+        - name: youtubez
           image: limkel/youtubez:2.0
           ports:
             - containerPort: 3000  # Your Node.js application should listen on port 3000
@@ -23,10 +23,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-app-service
+  name: youtubezsvc
 spec:
   selector:
-    app: my-app
+    app: youtubez
   ports:
     - protocol: TCP
       port: 80  # You can use port 80 here for HTTP traffic
